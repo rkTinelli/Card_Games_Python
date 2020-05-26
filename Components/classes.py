@@ -1,5 +1,6 @@
 import random
 
+
 # This file contains the classes that represents the basic components of a card game
 class Card:
     def __init__(self, symbol, value):
@@ -26,16 +27,15 @@ class Deck:
 
     def shuffle(self):
         for i in range(len(self.cards)):
-            r = random.randint(0,len(self.cards)-1)
-            self.cards[r],self.cards[i] = self.cards[i],self.cards[r]
+            r = random.randint(0, len(self.cards) - 1)
+            self.cards[r], self.cards[i] = self.cards[i], self.cards[r]
 
     def draw_card(self):
         return self.cards.pop()
 
 
-# To be implemented
 class Player:
-    def __init__(self,name):
+    def __init__(self, name):
         self.name = name
         self.hand = []
 
