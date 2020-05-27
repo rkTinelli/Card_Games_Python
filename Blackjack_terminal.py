@@ -1,54 +1,79 @@
-from Components.classes import Deck,Player
+from Components.classes import Deck, Player
 
-class Dealer(Player):
+
+class BJPlayer(Player):
+    def __init__(self, name):
+        super().__init__(name)
+        self.score = 0
+
+    def calc_score(self):
+        score = 0
+        checked_A_card = False
+        for card in self.hand:
+            if card.value == 'A':
+                if not checked_A_card:
+                    score += 11
+                    checked_A_card = True
+                else:
+                    score += 1
+            elif card.value in ['J', 'Q', 'K']:
+                score += 10
+            elif int(card.value) in range(2, 11):
+                score += int(card.value)
+        self.score = score
+
+    def display_info(player):
+        print(f"{player.name}'s cards:")
+        player.show_hand()
+        print(f'{player.name} score is: ' + str(player.score))
+
+
+class Dealer(BJPlayer):
     def __init__(self):
         super().__init__('Dealer')
 
     def show_hand_hiding_first(self):
-        print('-----------')
+        print("Dealer's cards: - Hidden card - and ", end='')
         self.hand[1].show_card()
-
-
-def hand_score(hand):
-    score = 0
-    checked_A_card = False
-    for card in hand:
-        if card.value == 'A':
-            if not checked_A_card:
-                score += 11
-                checked_A_card = True
-            else:
-                score += 1
-        elif card.value in ['J', 'Q', 'K']:
-            score += 10
-        elif int(card.value) in range(2,11):
-            score += int(card.value)
-    return score
 
 
 if __name__ == "__main__":
 
+    # Game variable
+    hitting = True
+    endgame = False
+
     # Deck of cards creation
-    deck = Deck()
+    deck = Deck(8)
     deck.shuffle()
 
     # Players creation
-    player = Player('Henry')
+    player = BJPlayer('Henry')
     dealer = Dealer()
 
-    # Give cards to both players
+    # Give cards to players
     player.draw_from_deck(deck)
     player.draw_from_deck(deck)
     dealer.draw_from_deck(deck)
     dealer.draw_from_deck(deck)
 
-    # Show players cards
-    print(f"{player.name}'s cards:")
-    player.show_hand()
+    # Update players score
+    player.calc_score()
 
-    print(f'{player.name} score is: ' + str(hand_score(player.hand)))
-
-    print("Dealer cards:")
+    # Show dealer and players cards
     dealer.show_hand_hiding_first()
-    dealer.show_hand()
-    print('Dealer score is: ' + str(hand_score(dealer.hand)))
+    player.display_info()
+
+    while hitting:
+        action = input('HIT or STAY? ( H / S ) ')
+        if action.upper() == "H":
+            player.draw_from_deck(deck)
+            player.calc_score()
+            if player.score > 21:
+                hitting, endgame = False, True
+                player.display_info()
+                print("Busted! That's the end of the game for you, Dealer won this time")
+                break
+            player.display_info()
+        else:
+            hitting = False

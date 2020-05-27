@@ -12,11 +12,12 @@ class Card:
 
 
 class Deck:
-    def __init__(self):
+    def __init__(self, number_decks):
         self.cards = []
-        self.build()
+        for n in range(number_decks):
+            self.add_full_deck()
 
-    def build(self):
+    def add_full_deck(self):
         for s in ['Clubs', 'Hearts', 'Spades', 'Diamonds']:
             for v in (list(range(2, 11)) + ['J', 'Q', 'K', 'A']):
                 self.cards.append(Card(s, v))
