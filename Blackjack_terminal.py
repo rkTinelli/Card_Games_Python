@@ -41,10 +41,13 @@ if __name__ == "__main__":
 
     # Game variable
     hitting = True
-    endgame = False
+    player_busted, dealer_busted, endgame = False, False, False
+    number_of_deck = 8
 
     # Deck of cards creation
-    deck = Deck(8)
+    deck = Deck()
+    for n in range(0,number_of_deck - 1):
+        deck.add_full_deck()
     deck.shuffle()
 
     # Players creation
@@ -64,16 +67,47 @@ if __name__ == "__main__":
     dealer.show_hand_hiding_first()
     player.display_info()
 
+    # if already 21, no need to go the the hitting pahse
+    if player.score == 21:
+        hitting = False
+
+    # Hitting phase
     while hitting:
         action = input('HIT or STAY? ( H / S ) ')
         if action.upper() == "H":
             player.draw_from_deck(deck)
             player.calc_score()
             if player.score > 21:
-                hitting, endgame = False, True
+                hitting, player_busted, endgame = False, True, True
                 player.display_info()
                 print("Busted! That's the end of the game for you, Dealer won this time")
                 break
+            elif player.score == 21:
+                hitting = False
             player.display_info()
         else:
             hitting = False
+
+    if not endgame:
+        # player stayed, Dealer's turn
+        dealer.calc_score()
+        while dealer.score < 17:
+            dealer.draw_from_deck(deck)
+            dealer.calc_score()
+            if dealer.score > 21:
+                dealer_busted, endgame = True, True
+                dealer.display_info()
+                print("Dealer is busted! Congrats! You won!")
+                break
+
+    if not endgame:
+        # Check if both players are still alive in the game
+        if not player_busted or not dealer_busted:
+            dealer.display_info()
+            # Check who won the game based on their score
+            if player.score > dealer.score:
+                print("Congrats! You won!")
+            elif player.score == dealer.score:
+                print("Draw! Better luck next time")
+            else:
+                print("Dealer won this time! Better luck next time")

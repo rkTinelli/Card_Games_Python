@@ -12,10 +12,9 @@ class Card:
 
 
 class Deck:
-    def __init__(self, number_decks):
+    def __init__(self):
         self.cards = []
-        for n in range(number_decks):
-            self.add_full_deck()
+        self.add_full_deck()
 
     def add_full_deck(self):
         for s in ['Clubs', 'Hearts', 'Spades', 'Diamonds']:
