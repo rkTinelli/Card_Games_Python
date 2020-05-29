@@ -22,10 +22,10 @@ class BJPlayer(Player):
                 score += int(card.value)
         self.score = score
 
-    def display_info(player):
-        print(f"{player.name}'s cards:")
-        player.show_hand()
-        print(f'{player.name} score is: ' + str(player.score))
+    def display_info(self):
+        print(f"{self.name}'s cards:")
+        self.show_hand()
+        print(f'{self.name} score is: ' + str(self.score))
 
 
 class Dealer(BJPlayer):
